@@ -16,6 +16,7 @@ class FinancialRecord(TimestampMixin):
     record_type = models.CharField(max_length=10, choices=Type.choices)
     date = models.DateField()
     category = models.CharField(max_length=100)
+    currency = models.CharField(max_length=3, default='USD')
     description = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -25,4 +26,4 @@ class FinancialRecord(TimestampMixin):
         ]
 
     def __str__(self):
-        return f"{self.type} - {self.amount} ({self.date})"
+        return f"{self.record_type} - {self.amount} {self.currency} ({self.date})"
