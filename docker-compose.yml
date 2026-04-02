@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: zorvyn_db
+    environment:
+      POSTGRES_DB: zorvyn_db
+      POSTGRES_USER: zorvyn_user
+      POSTGRES_PASSWORD: zorvyn_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
