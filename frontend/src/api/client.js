@@ -1,13 +1,17 @@
 import axios from 'axios';
 
+// Uses VITE_API_URL env var when deployed (set on Render).
+// Falls back to localhost for local development.
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/';
+
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Add a request interceptor to attach the JWT token
+// Attach JWT token to every request
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
@@ -19,28 +23,26 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Add a response interceptor to handle token refresh or errors
+// Handle token refresh on 401
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    
-    // If the error is 401 and we haven't retried yet
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refresh_token');
-      
+
       if (refreshToken) {
         try {
-          const response = await axios.post('http://localhost:8000/api/users/refresh/', {
+          const response = await axios.post(`${BASE_URL}users/refresh/`, {
             refresh: refreshToken,
           });
-          
+
           localStorage.setItem('access_token', response.data.access);
           apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
           return apiClient(originalRequest);
-        } catch (refreshError) {
-          // If refresh fails, log out the user
+        } catch {
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
           window.location.href = '/login';

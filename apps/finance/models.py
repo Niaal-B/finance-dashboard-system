@@ -12,7 +12,7 @@ class FinancialRecord(TimestampMixin):
         on_delete=models.CASCADE,
         related_name='financial_records'
     )
-    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    amount = models.DecimalField(max_digits=20, decimal_places=2)
     record_type = models.CharField(max_length=10, choices=Type.choices)
     date = models.DateField()
     category = models.CharField(max_length=100)

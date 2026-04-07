@@ -3,27 +3,39 @@ from django.db import transaction
 from .models import FinancialRecord
 from .serializers import FinancialRecordSerializer
 from .filters import FinancialRecordFilter
-from core.permissions import IsOwner
+from core.permissions import IsAnalyst
+
 
 class FinancialRecordViewSet(viewsets.ModelViewSet):
     """
-    ViewSet for viewing and editing financial records.
-    Only the owner of a record can see or modify it.
+    ViewSet for the shared financial ledger.
+
+    All authenticated users can view all records (shared internal tool).
+    Only Analysts and Admins can create, update, or delete records.
+    The `user` field tracks who entered each record (audit trail).
     """
     serializer_class = FinancialRecordSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
     filterset_class = FinancialRecordFilter
     search_fields = ['description', 'category']
     ordering_fields = ['date', 'amount', 'created_at']
     ordering = ['-date']
 
     def get_queryset(self):
-        # Ensure users only see their own records
-        return FinancialRecord.objects.filter(user=self.request.user)
+        # Shared ledger — all users see the same pool of records
+        return FinancialRecord.objects.all()
+
+    def get_permissions(self):
+        """
+        - Write actions (create/update/delete) require Analyst or Admin role.
+        - Read actions (list/retrieve) require only authentication.
+        """
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [permissions.IsAuthenticated(), IsAnalyst()]
+        return [permissions.IsAuthenticated()]
 
     @transaction.atomic
     def perform_create(self, serializer):
-        # Automatically set the user to the current authenticated user
+        # Track who entered the record (audit trail) but don't restrict visibility
         serializer.save(user=self.request.user)
 
     @transaction.atomic
