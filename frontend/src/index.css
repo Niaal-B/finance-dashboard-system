@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { @apply border-glass; }
+  html { @apply bg-midnight text-white; }
+  body { @apply bg-midnight text-white antialiased; }
+  input, select, textarea { @apply text-white; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { @apply w-1.5; }
+  ::-webkit-scrollbar-track { @apply bg-transparent; }
+  ::-webkit-scrollbar-thumb { @apply rounded-full bg-white/10 hover:bg-white/20; }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl shadow-glass;
+  }
+  .glass-hover {
+    @apply hover:bg-white/[0.07] hover:shadow-glass-hover transition-all duration-300;
+  }
+  .btn-primary {
+    @apply bg-gradient-blue text-white font-semibold rounded-xl px-6 py-2.5
+      hover:opacity-90 active:scale-95 transition-all duration-200 
+      flex items-center gap-2 justify-center;
+  }
+  .btn-ghost {
+    @apply bg-white/5 border border-white/10 text-white font-medium rounded-xl px-6 py-2.5
+      hover:bg-white/10 active:scale-95 transition-all duration-200 flex items-center gap-2 justify-center;
+  }
+  .btn-danger {
+    @apply bg-red-500/10 border border-red-500/20 text-red-400 font-medium rounded-xl px-4 py-2
+      hover:bg-red-500/20 active:scale-95 transition-all duration-200 flex items-center gap-2;
+  }
+  .input-field {
+    @apply w-full bg-white/[0.04] border border-white/10 rounded-xl py-3 px-4 
+      text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/40 
+      focus:border-blue-500/40 transition-all duration-200;
+  }
+  .input-icon {
+    @apply pl-11;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold;
+  }
+  .badge-admin { @apply badge bg-purple-500/15 text-purple-300 border border-purple-500/20; }
+  .badge-analyst { @apply badge bg-blue-500/15 text-blue-300 border border-blue-500/20; }
+  .badge-viewer { @apply badge bg-gray-500/15 text-gray-300 border border-gray-500/20; }
+  .badge-income { @apply badge bg-emerald-500/15 text-emerald-300 border border-emerald-500/20; }
+  .badge-expense { @apply badge bg-red-500/15 text-red-300 border border-red-500/20; }
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-white/50
+      hover:text-white hover:bg-white/5 transition-all duration-200 cursor-pointer w-full;
+  }
+  .nav-item-active {
+    @apply nav-item text-white bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/15;
+  }
+  .page-header { @apply animate-fade-in; }
+  .card-animate { @apply animate-slide-up; }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent;
+  }
+  .bg-mesh { background-image: radial-gradient(at 40% 20%, hsla(217,100%,56%,0.12) 0px, transparent 50%), radial-gradient(at 80% 0%, hsla(263,100%,60%,0.08) 0px, transparent 50%), radial-gradient(at 0% 50%, hsla(355,100%,52%,0.06) 0px, transparent 50%); }
+}
